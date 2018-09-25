@@ -9,6 +9,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn import metrics
 from sklearn import model_selection
+import numpy as np
 
 data = pd.read_csv('abalone.csv')
 
@@ -17,7 +18,7 @@ data['Sex'] = data['Sex'].apply(lambda x: 1 if x == 'M' else (0 if x == 'I' else
 target = data.iloc[:, -1]
 predictors = data.iloc[:, :-1]
 
-tree_count = range(1, 50)
+tree_count = np.arange(1, 51)
 n = 5
 scores = []
 
@@ -27,6 +28,8 @@ for c in tree_count:
   cv = model_selection.KFold(n_splits = n, shuffle = True, random_state=1)
   model_score = model_selection.cross_val_score(tree, predictors, target, scoring = 'r2', cv = cv).mean()
   scores.append(model_score)
-  
 
+
+l = list(zip(tree_count, scores))
+answer = list(filter(lambda x: x[1] > 0.52, l))
 
